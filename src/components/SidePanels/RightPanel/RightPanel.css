@@ -1,14 +1,13 @@
 .right-panel {
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   height: 100%;
 }
 
 .config-header {
   border-bottom: 1px solid var(--glass-border);
   padding-bottom: 1rem;
+  padding: 12px;
 }
 
 .config-header h4 {

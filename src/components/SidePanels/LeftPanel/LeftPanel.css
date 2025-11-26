@@ -176,3 +176,175 @@
 .layers-title{
   padding: 12px;
 }
+
+/* Стили для кнопки видимости */
+.visibility-toggle {
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.visibility-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.visibility-toggle.visible {
+  color: var(--success-color, #10b981);
+}
+
+.visibility-toggle.hidden {
+  color: var(--error-color, #ef4444);
+}
+
+/* Обновляем layout для элементов слоев */
+.simple-layer-item.nested {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  border-bottom: 1px solid var(--glass-border);
+  position: relative;
+  min-height: 44px;
+}
+
+.simple-layer-item.nested:last-child {
+  border-bottom: none;
+}
+
+.layer-icon {
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.layer-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.5rem;
+}
+
+.layer-type {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  background: var(--glass-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+/* Стили для контейнера с названием слоя */
+.layer-name-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.5rem;
+}
+
+.layer-name {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.layer-id {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* LeftPanel.css */
+.left-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Секция со слоями должна скроллиться */
+.layers-section {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+/* Остальные стили остаются без изменений... */
+
+/* Scrollbar styling */
+.layers-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.layers-section::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.layers-section::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 3px;
+}
+
+.layers-section::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Убедимся что контент не выходит за границы */
+.nested-layers {
+  max-height: none; /* Убираем ограничения если были */
+}
+
+.layer-group {
+  min-height: 0; /* Позволяет сжиматься */
+}
+
+/* Стили для цветных иконок слоев */
+.layer-color-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.layer-color-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Обновляем layout для элементов с цветными иконками */
+.simple-layer-item.nested {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  border-bottom: 1px solid var(--glass-border);
+  position: relative;
+  min-height: 44px;
+}
+
+/* Убираем старые точки-индикаторы */
+.simple-layer-item.nested::before {
+  display: none;
+}
