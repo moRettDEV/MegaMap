@@ -1,0 +1,170 @@
+import React, { useState } from 'react';
+import { useMapStyle } from '../../../context/MapStyleContext';
+import GlassCard from '../../UI/GlassCard/GlassCard';
+import PropertiesPanel from './PropertiesPanel/PropertiesPanel';
+import './RightPanel.css';
+
+const RightPanel = () => {
+  const { mapStyle, dispatch } = useMapStyle();
+  const [isHidden, setIsHidden] = useState(false);
+  const [configName, setConfigName] = useState(mapStyle.name || '');
+
+  const handleHideToggle = () => setIsHidden(!isHidden);
+
+  const handleSave = () => {
+    const styleToSave = {
+      ...mapStyle,
+      name: configName || 'Unnamed Style'
+    };
+    
+    const blob = new Blob([JSON.stringify(styleToSave, null, 2)], { 
+      type: 'application/json' 
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${configName || 'map-style'}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleLoad = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const styleJson = JSON.parse(event.target.result);
+            dispatch({ type: 'LOAD_STYLE', payload: styleJson });
+            setConfigName(styleJson.name || '');
+          } catch (error) {
+            alert('Error loading style file');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleReset = () => {
+  const defaultStyle = {
+    version: 8,
+    name: 'Default Dark Style',
+    sources: {
+      "openmaptiles": {
+        "type": "vector",
+        "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+      }
+    },
+    glyphs: "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
+    sprite: "https://api.maptiler.com/maps/basic/sprite",
+    layers: [
+      {
+        id: 'background',
+        type: 'background',
+        paint: {
+          'background-color': 'rgba(15, 17, 22, 1)'
+        }
+      },
+      {
+        id: 'water',
+        type: 'fill',
+        source: 'openmaptiles',
+        'source-layer': 'water',
+        paint: {
+          'fill-color': 'rgba(40, 100, 190, 1)',
+          'fill-opacity': 0.8
+        }
+      },
+      {
+        id: 'park',
+        type: 'fill',
+        source: 'openmaptiles',
+        'source-layer': 'park',
+        paint: {
+          'fill-color': 'rgba(40, 52, 59, 1)',
+          'fill-opacity': 0.3
+        }
+      },
+      {
+        id: 'landcover_wood',
+        type: 'fill',
+        source: 'openmaptiles',
+        'source-layer': 'landcover',
+        filter: ['==', 'class', 'wood'],
+        paint: {
+          'fill-color': 'rgba(35, 60, 55, 0.85)',
+          'fill-opacity': 0.8
+        }
+      },
+      {
+        id: 'roads',
+        type: 'line',
+        source: 'openmaptiles',
+        'source-layer': 'transportation',
+        paint: {
+          'line-color': 'rgba(100, 100, 100, 1)',
+          'line-width': 2
+        }
+      },
+      {
+        id: 'buildings',
+        type: 'fill',
+        source: 'openmaptiles',
+        'source-layer': 'building',
+        paint: {
+          'fill-color': 'rgba(55, 62, 75, 1)',
+          'fill-opacity': 0.6
+        }
+      }
+    ]
+  };
+  
+  dispatch({ type: 'LOAD_STYLE', payload: defaultStyle });
+  setConfigName('Default Dark Style');
+};
+
+  if (isHidden) {
+    return (
+      <div className="right-panel-hidden">
+        <button className="show-panel-btn" onClick={handleHideToggle}>◀</button>
+      </div>
+    );
+  }
+
+  return (
+    <GlassCard className="right-panel">
+      <div className="config-header">
+        <h4>Style Properties</h4>
+        <div className="config-controls">
+          <input 
+            type="text" 
+            placeholder="Style name..."
+            value={configName}
+            onChange={(e) => setConfigName(e.target.value)}
+            className="config-input"
+          />
+          <div className="control-buttons">
+            <button className="control-btn save-btn" onClick={handleSave}>💾 Save</button>
+            <button className="control-btn load-btn" onClick={handleLoad}>📂 Load</button>
+            <button className="control-btn reset-btn" onClick={handleReset}>🔄 Reset</button>
+            <button className="control-btn hide-btn" onClick={handleHideToggle}>👁️ Hide</button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="properties-section">
+        <PropertiesPanel />
+      </div>
+    </GlassCard>
+  );
+};
+
+export default RightPanel;

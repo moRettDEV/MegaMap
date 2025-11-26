@@ -1,0 +1,14 @@
+.theme-toggle-btn {
+  border: 1px solid var(--glass-border) !important;
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  font-size: 1.2rem !important;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--glass-bg) !important;
+  border-color: var(--accent-color) !important;
+  transform: scale(1.05);
+}

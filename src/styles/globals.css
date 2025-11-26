@@ -1,0 +1,111 @@
+/* CSS Variables that will be overridden by themes */
+:root {
+  --glass-bg: rgba(0, 0, 0, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --accent-color: #007AFF;
+  --success-color: #34C759;
+  --warning-color: #FF9500;
+  --danger-color: #FF3B30;
+}
+
+/* Glass morphism effect */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: var(--glass-shadow);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* CSS Variables that will be overridden by themes */
+:root {
+  --glass-bg: rgba(0, 0, 0, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --accent-color: #007AFF;
+  --success-color: #34C759;
+  --warning-color: #FF9500;
+  --danger-color: #FF3B30;
+}
+
+/* Glass morphism effect */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: var(--glass-shadow);
+}
+
+/* Дебаг - если не работают переменные */
+.debug-theme {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 10px;
+  border: 1px solid var(--glass-border);
+}
+
+/* Принудительно применяем цвет текста ко всем элементам */
+[data-theme="dark"] {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] {
+  color: var(--text-primary) !important;
+}
+
+/* Специфичные стили для разных элементов */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] p,
+[data-theme="dark"] span,
+[data-theme="dark"] div {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6,
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] div {
+  color: var(--text-primary) !important;
+}
+
+/* Стили для input и select */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  color: var(--text-primary) !important;
+  background: var(--glass-bg) !important;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  color: var(--text-primary) !important;
+  background: var(--glass-bg) !important;
+}

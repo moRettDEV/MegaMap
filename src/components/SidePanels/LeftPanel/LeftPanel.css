@@ -1,0 +1,178 @@
+/* Стили для групп слоев - фиксируем ширину */
+.layer-group {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.layer-group:last-child {
+  border-bottom: none;
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-height: 44px; /* Фиксированная высота */
+}
+
+.group-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Фиксируем layout заголовка группы */
+.group-name {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex: 1;
+  min-width: 0; /* Позволяет тексту обрезаться */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.5rem; /* Отступ перед счетчиком */
+}
+
+.group-count {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  background: var(--glass-bg);
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  flex-shrink: 0; /* Запрещаем сжатие */
+  margin-right: 0.5rem; /* Отступ перед стрелкой */
+}
+
+.group-toggle {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  flex-shrink: 0; /* Запрещаем сжатие */
+}
+
+/* Контейнер для вложенных слоев */
+.nested-layers {
+  background: rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--glass-border);
+}
+
+/* Вложенные элементы слоев с паддингом слева и точкой */
+.simple-layer-item.nested {
+  padding: 0.75rem 0.75rem 0.75rem 2rem; /* 32px слева */
+  border-bottom: 1px solid var(--glass-border);
+  position: relative;
+  min-height: 44px; /* Такая же высота как у групп */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Индикатор вложенности */
+.simple-layer-item.nested::before {
+  content: '';
+  position: absolute;
+  left: 1rem; /* 16px от левого края */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--text-secondary);
+  border-radius: 50%;
+}
+
+.simple-layer-item.nested:last-child {
+  border-bottom: none;
+}
+
+.simple-layer-item.nested:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.simple-layer-item.nested.selected {
+  background: rgba(0, 122, 255, 0.15);
+  border-left: 3px solid var(--accent-color);
+}
+
+.simple-layer-item.nested.selected::before {
+  background: var(--accent-color);
+}
+
+/* Фиксируем layout элементов слоев */
+.layer-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0.5rem;
+}
+
+.layer-type {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  background: var(--glass-bg);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+/* Header контейнер */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid var(--glass-border);
+  min-height: 60px;
+  flex-shrink: 0;
+  gap: 1rem;
+}
+
+/* Левая часть - лого и название */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.app-title h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+/* Поиск по центру */
+.search-section {
+  display: flex;
+  justify-content: center;
+  padding: 12px
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+/* Счетчик слоев справа */
+.layers-count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  background: var(--glass-bg);
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.layers-title{
+  padding: 12px;
+}

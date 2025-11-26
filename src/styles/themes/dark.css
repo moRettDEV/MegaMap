@@ -1,0 +1,10 @@
+[data-theme="dark"] {
+  --glass-bg: rgba(0, 0, 0, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --accent-color: #007AFF;
+}
