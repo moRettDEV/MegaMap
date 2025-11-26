@@ -12,8 +12,8 @@ const MapComponent = () => {
 
     console.log('🔄 Creating map...');
 
-    // ПРОСТО ИСПОЛЬЗУЕМ СТИЛЬ КАК ЕСТЬ
-    const initialStyle = mapStyle || {
+    // БАЗОВЫЙ СТИЛЬ КАК ФАЛЛБЭК
+    const fallbackStyle = {
       version: 8,
       sources: {
         "osm": {
@@ -29,6 +29,9 @@ const MapComponent = () => {
       }]
     };
 
+    // ИСПОЛЬЗУЕМ ТВОЙ СТИЛЬ ИЛИ ФАЛЛБЭК
+    const initialStyle = mapStyle || fallbackStyle;
+
     map.current = new window.maplibregl.Map({
       container: mapContainer.current,
       style: initialStyle,
@@ -41,19 +44,72 @@ const MapComponent = () => {
       maxPitch: 85
     });
 
-    // ИГНОРИРУЕМ ВСЕ ОШИБКИ
+    // ОБРАБОТЧИК ДЛЯ ОТСУТСТВУЮЩИХ ИКОНОК
+    map.current.on('styleimagemissing', (e) => {
+      try {
+        console.log(`🔄 Creating placeholder for: ${e.id}`);
+        const size = 24;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const context = canvas.getContext('2d');
+        
+        // Простая иконка
+        context.fillStyle = '#3388ff';
+        context.beginPath();
+        context.arc(size/2, size/2, size/3, 0, Math.PI * 2);
+        context.fill();
+        
+        map.current.addImage(e.id, canvas);
+      } catch (error) {
+        // Игнорируем ошибки
+      }
+    });
+
+    // ИГНОРИРУЕМ ОШИБКИ ЗАГРУЗКИ ТАЙЛОВ
     map.current.on('error', (e) => {
-      console.log('Ignoring map error:', e.error?.message);
-      return;
+      if (e.error && e.error.message && (
+          e.error.message.includes('404') || 
+          e.error.message.includes('Failed to fetch') ||
+          e.error.message.includes('get_your_own')
+        )) {
+        return;
+      }
+      console.log('Map error:', e.error?.message);
     });
 
     map.current.on('load', () => {
       console.log('✅ Map loaded');
       
-      // Включаем 3D
+      // ВКЛЮЧАЕМ 3D
       map.current.dragRotate.enable();
       map.current.touchZoomRotate.enable();
       console.log('🎯 3D controls enabled');
+
+      // ПРОВЕРЯЕМ СЛОИ
+      setTimeout(() => {
+        const style = map.current.getStyle();
+        console.log('Available layers:', style.layers.map(l => l.id));
+        
+        // ВКЛЮЧАЕМ ВСЕ СЛОИ
+        style.layers.forEach(layer => {
+          try {
+            map.current.setLayoutProperty(layer.id, 'visibility', 'visible');
+          } catch (e) {}
+        });
+      }, 1000);
+    });
+
+    // АВТОМАТИЧЕСКОЕ ВКЛЮЧЕНИЕ 3D ПРИ ПРИБЛИЖЕНИИ
+    map.current.on('zoom', () => {
+      if (map.current && map.current.getZoom() > 15 && map.current.getPitch() === 0) {
+        console.log('🏙️ Auto-enabling 3D');
+        map.current.easeTo({
+          pitch: 60,
+          bearing: -20,
+          duration: 1000
+        });
+      }
     });
 
     return () => {
@@ -64,9 +120,9 @@ const MapComponent = () => {
     };
   }, []);
 
-  // ПРОСТО ОБНОВЛЯЕМ СТИЛЬ БЕЗ ИЗМЕНЕНИЙ
+  // ОБНОВЛЯЕМ СТИЛЬ С ОБРАБОТКОЙ ОШИБОК
   useEffect(() => {
-    if (map.current && map.current.isStyleLoaded() && mapStyle) {
+    if (map.current && mapStyle) {
       console.log('🔄 Updating map style...');
       
       try {
@@ -76,7 +132,7 @@ const MapComponent = () => {
           console.log('✅ Map style updated');
         });
       } catch (error) {
-        console.log('Style update error (ignoring):', error.message);
+        console.log('Style update failed:', error.message);
       }
     }
   }, [mapStyle]);
