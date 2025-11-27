@@ -278,6 +278,47 @@ const PropertiesPanel = () => {
           </div>
         )}
 
+        {/* Fill-Extrusion (3D Buildings) Properties */}
+        {selectedLayer.type === 'fill-extrusion' && (
+          <div className="property-group">
+            <h6 className="property-group-title">3D Building Properties</h6>
+
+            <div className="property-item">
+              <label className="property-label">Building Color</label>
+              <div className="property-control">
+                <ColorPicker 
+                  value={getDisplayValue('paint.fillExtrusionColor') || getDisplayValue('paint.fill-extrusion-color') || '#cccccc'}
+                  onChange={(color) => updateLayerProperty('paint.fill-extrusion-color', color)}
+                />
+              </div>
+            </div>
+
+            <div className="property-item">
+              <label className="property-label">Extrusion Opacity</label>
+              <div className="property-control">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={getSimpleValue(
+                    getDisplayValue('paint.fillExtrusionOpacity') || getDisplayValue('paint.fill-extrusion-opacity'),
+                    1
+                  )}
+                  onChange={(e) => updateLayerProperty('paint.fill-extrusion-opacity', parseFloat(e.target.value))}
+                  className="property-slider"
+                />
+                <span className="property-value">
+                  {Math.round(getSimpleValue(
+                    getDisplayValue('paint.fillExtrusionOpacity') || getDisplayValue('paint.fill-extrusion-opacity'),
+                    1
+                  ) * 100)}%
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Symbol (labels/icons) Properties */}
         {selectedLayer.type === 'symbol' && (
           <div className="property-group">

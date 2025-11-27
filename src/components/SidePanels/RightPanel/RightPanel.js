@@ -330,6 +330,7 @@ const RightPanel = () => {
                   <option value="paint.fill-color">Fill Color</option>
                   <option value="paint.fill-outline-color">Fill Outline</option>
                   <option value="paint.line-color">Line Color</option>
+                  <option value="paint.fill-extrusion-color">3D Buildings Color</option>
                   <option value="paint.text-color">Text Color</option>
                   <option value="paint.text-halo-color">Text Halo</option>
                 </select>
