@@ -14,7 +14,72 @@ const RightPanel = () => {
     setConfigName(mapStyle?.name || '');
   }, [mapStyle]);
 
-  const handleHideToggle = () => setIsHidden(!isHidden);
+  const handleHideToggle = () => {
+    const newHidden = !isHidden;
+    setIsHidden(newHidden);
+    toggleUIHidden(newHidden, true);
+  };
+
+  // Toggle UI with keyboard (F). If toggled via keyboard, do not create floating unhide button;
+  // use F again to restore UI.
+  React.useEffect(() => {
+    const onKey = (e) => {
+      // ignore when typing in inputs or editable elements
+      const target = e.target;
+      const tag = target && target.tagName && target.tagName.toLowerCase();
+      const editable = target && (target.isContentEditable || tag === 'input' || tag === 'textarea' || tag === 'select');
+      if (editable) return;
+
+      if (e.key === 'f' || e.key === 'F' || e.code === 'KeyF') {
+        e.preventDefault();
+        const newHidden = !isHidden;
+        setIsHidden(newHidden);
+        // when using keyboard, do NOT create the floating unhide button
+        toggleUIHidden(newHidden, false);
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isHidden]);
+
+  // Toggle hiding entire UI (for fullscreen map screenshots)
+  const toggleUIHidden = (hide, createUnhideButton = true) => {
+    const root = document.querySelector('.main-layout');
+    const existing = document.getElementById('ui-unhide-btn');
+
+    if (hide) {
+      if (root) root.classList.add('ui-hidden');
+
+      // create a small unhide button if it doesn't exist and caller allows it
+      if (createUnhideButton && !existing) {
+        const btn = document.createElement('button');
+        btn.id = 'ui-unhide-btn';
+        btn.innerText = 'Show UI';
+        btn.title = 'Show UI';
+        Object.assign(btn.style, {
+          position: 'fixed',
+          top: '10px',
+          right: '10px',
+          zIndex: 99999,
+          padding: '8px 10px',
+          background: 'rgba(0,0,0,0.7)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer'
+        });
+        btn.onclick = () => {
+          toggleUIHidden(false, true);
+          setIsHidden(false);
+        };
+        document.body.appendChild(btn);
+      }
+    } else {
+      if (root) root.classList.remove('ui-hidden');
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    }
+  };
 
   const handleSave = () => {
     const styleToSave = {
