@@ -144,3 +144,52 @@
   border-color: var(--accent-color);
   transform: translateX(-2px);
 }
+
+/* Bulk modal styles */
+.bulk-modal {
+  position: fixed;
+  display: block;
+  z-index: 1000000;
+  pointer-events: none; /* allow clicks to fall through except modal card */
+}
+.bulk-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.12);
+  border-radius: 0;
+  z-index: 999999;
+  pointer-events: none;
+}
+.bulk-modal-card {
+  width: 380px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: var(--glass-shadow);
+  cursor: default;
+  position: relative;
+  z-index: 1000001;
+  pointer-events: auto; /* allow interactions inside the modal */
+}
+.bulk-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: grab;
+}
+.bulk-modal-body { display: flex; flex-direction: column; gap: 10px; }
+.bulk-row { display:flex; align-items:center; gap:8px; justify-content: space-between; }
+.bulk-row label { font-size: 13px; color: var(--text-secondary); min-width: 70px; }
+.bulk-modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top: 12px; }
+.bulk-open-btn {
+  width: 100%;
+  display: block;
+  margin-top: 8px;
+  flex: none; /* override .control-btn flex:1 so it fills width instead of sharing row */
+  padding: 0.75rem 0.8rem;
+  border-radius: 10px;
+}

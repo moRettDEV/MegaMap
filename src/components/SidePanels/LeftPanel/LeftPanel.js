@@ -4,6 +4,7 @@ import GlassCard from '../../UI/GlassCard/GlassCard';
 import ThemeToggle from '../../UI/ThemeToggle/ThemeToggle';
 import Search from '../../UI/Search/Search';
 import './LeftPanel.css';
+import { translateLayerId } from '../../../utils/styleHelpers';
 
 const LeftPanel = () => {
   const { mapStyle, dispatch, selectedLayer } = useMapStyle();
@@ -44,84 +45,7 @@ const LeftPanel = () => {
 
   // Функция для получения русского названия слоя
   const getRussianName = (layerId) => {
-    const names = {
-      // Background & Base
-      'background': 'Фон',
-      'natural_earth': 'Рельеф Земли',
-      
-      // Land & Nature
-      'park': 'Парки',
-      'park_outline': 'Контур парков',
-      'landuse_residential': 'Жилые районы',
-      'landcover_wood': 'Леса',
-      'landcover_grass': 'Луга',
-      'landcover_ice': 'Ледники',
-      'landcover_wetland': 'Болота',
-      'landuse_pitch': 'Спортплощадки',
-      'landuse_track': 'Тропы',
-      'landuse_cemetery': 'Кладбища',
-      'landuse_hospital': 'Больницы',
-      'landuse_school': 'Школы',
-      'landcover_sand': 'Песок',
-      
-      // Water
-      'waterway_tunnel': 'Тоннели водные',
-      'waterway_river': 'Реки',
-      'waterway_other': 'Водотоки',
-      'water': 'Вода',
-      
-      // Transportation
-      'aeroway_fill': 'Аэропорты',
-      'aeroway_runway': 'ВПП',
-      'aeroway_taxiway': 'РД',
-      'road_motorway_link_casing': 'Обводка съездов',
-      'road_service_track_casing': 'Обводка сервисных',
-      'road_link_casing': 'Обводка ответвлений',
-      'road_minor_casing': 'Обводка мелких дорог',
-      'road_secondary_tertiary_casing': 'Обводка второстепенных',
-      'road_trunk_primary_casing': 'Обводка магистралей',
-      'road_motorway_casing': 'Обводка автострад',
-      'road_path_pedestrian': 'Тротуары',
-      'road_motorway_link': 'Съезды',
-      'road_service_track': 'Сервисные дороги',
-      'road_link': 'Ответвления',
-      'road_minor': 'Мелкие дороги',
-      'road_secondary_tertiary': 'Второстепенные дороги',
-      'road_trunk_primary': 'Магистрали',
-      'road_motorway': 'Автострады',
-      'road_major_rail': 'Железные дороги',
-      'road_transit_rail': 'Метро',
-      
-      // Buildings
-      'building': 'Здания 2D',
-      'building-3d': 'Здания 3D',
-      
-      // Boundaries
-      'boundary_3': 'Границы регионов',
-      'boundary_2_z0-4': 'Границы стран',
-      'boundary_2_z5-': 'Границы стран детальные',
-      
-      // Labels
-      'water_name_line': 'Названия рек',
-      'water_name_point': 'Названия водоемов',
-      'poi_z16': 'POI детальные',
-      'poi_z15': 'POI средние',
-      'poi_z14': 'POI основные',
-      'poi_transit': 'Транспорт POI',
-      'road_label': 'Названия дорог',
-      'road_shield': 'Номера дорог',
-      'place_other': 'Малые населенные пункты',
-      'place_village': 'Деревни',
-      'place_town': 'Города',
-      'place_city': 'Крупные города',
-      'state': 'Штаты/области',
-      'country_3': 'Страны малые',
-      'country_2': 'Страны средние',
-      'country_1': 'Страны крупные',
-      'continent': 'Континенты'
-    };
-
-    return names[layerId] || layerId;
+    return translateLayerId(layerId);
   };
 
   // Функция для получения цветной иконки слоя

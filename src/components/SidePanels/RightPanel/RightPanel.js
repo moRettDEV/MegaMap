@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useMapStyle } from '../../../context/MapStyleContext';
 import GlassCard from '../../UI/GlassCard/GlassCard';
 import PropertiesPanel from './PropertiesPanel/PropertiesPanel';
 import './RightPanel.css';
+import ColorPicker from '../../UI/ColorPicker/ColorPicker';
 
 const RightPanel = () => {
   const { mapStyle, dispatch } = useMapStyle();
   const [isHidden, setIsHidden] = useState(false);
   const [configName, setConfigName] = useState(mapStyle?.name || '');
+  const [bulkFrom, setBulkFrom] = useState('#ffffff');
+  const [bulkTo, setBulkTo] = useState('#ff0000');
+  const [bulkProperty, setBulkProperty] = useState('paint.fill-color');
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const rightPanelRef = useRef(null);
+  const [modalPos, setModalPos] = useState({ left: 0, top: 0 });
+  const [dragging, setDragging] = useState(false);
+  const dragOffset = useRef({ x: 0, y: 0 });
+  const modalRef = useRef(null);
 
   // keep configName in sync when a new style is loaded via context
   React.useEffect(() => {
@@ -42,6 +53,42 @@ const RightPanel = () => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isHidden]);
+
+  // compute initial modal position near the right panel when opened
+  useEffect(() => {
+    if (!bulkOpen) return;
+    const panel = document.querySelector('.right-panel');
+    const modalW = 380;
+    const gap = 12;
+    if (panel) {
+      const rect = panel.getBoundingClientRect();
+      let left = rect.left - modalW - gap;
+      if (left < 8) left = rect.right + gap; // if not enough space on left, open to right
+      const top = rect.top + 40;
+      setModalPos({ left, top });
+    } else {
+      setModalPos({ left: window.innerWidth - modalW - 40, top: 80 });
+    }
+  }, [bulkOpen]);
+
+  // dragging handlers
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging) return;
+      const nx = e.clientX - dragOffset.current.x;
+      const ny = e.clientY - dragOffset.current.y;
+      setModalPos({ left: nx, top: ny });
+    };
+    const onUp = () => {
+      if (dragging) setDragging(false);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, [dragging]);
 
   // Toggle hiding entire UI (for fullscreen map screenshots)
   const toggleUIHidden = (hide, createUnhideButton = true) => {
@@ -241,9 +288,70 @@ const RightPanel = () => {
             <button className="control-btn load-btn" onClick={handleLoad}>📂 Load</button>
             <button className="control-btn reset-btn" onClick={handleReset}>🔄 Reset</button>
             <button className="control-btn hide-btn" onClick={handleHideToggle}>👁️ Hide</button>
+            <div style={{ marginTop: '8px', width: '100%' }}>
+              <button className="control-btn bulk-open-btn" onClick={() => setBulkOpen(true)}>🪄 Bulk Replace</button>
+            </div>
+
+      {bulkOpen && createPortal(
+        <div
+          className="bulk-modal"
+          style={{ left: modalPos.left, top: modalPos.top, position: 'fixed' }}
+        >
+          <div className="bulk-modal-backdrop" />
+          <div
+            className="bulk-modal-card"
+            ref={rightPanelRef}
+            onMouseDown={(e) => {
+              const header = e.target.closest('.bulk-modal-header');
+              if (header) {
+                setDragging(true);
+                dragOffset.current = { x: e.clientX - modalPos.left, y: e.clientY - modalPos.top };
+              }
+            }}
+          >
+            <div className="bulk-modal-header">
+              <h4>Массовая замена цвета</h4>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button className="control-btn" onClick={() => setBulkOpen(false)}>✕</button>
+              </div>
+            </div>
+            <div className="bulk-modal-body">
+              <div className="bulk-row">
+                <label>От</label>
+                <ColorPicker value={bulkFrom} onChange={(v) => setBulkFrom(v)} />
+              </div>
+              <div className="bulk-row">
+                <label>На</label>
+                <ColorPicker value={bulkTo} onChange={(v) => setBulkTo(v)} />
+              </div>
+              <div className="bulk-row">
+                <label>Свойство</label>
+                <select value={bulkProperty} onChange={(e) => setBulkProperty(e.target.value)}>
+                  <option value="paint.fill-color">Fill Color</option>
+                  <option value="paint.fill-outline-color">Fill Outline</option>
+                  <option value="paint.line-color">Line Color</option>
+                  <option value="paint.text-color">Text Color</option>
+                  <option value="paint.text-halo-color">Text Halo</option>
+                </select>
+              </div>
+            </div>
+            <div className="bulk-modal-actions">
+              <button className="control-btn" onClick={() => { setBulkOpen(false); }}>Cancel</button>
+              <button className="control-btn" onClick={() => {
+                if (!dispatch) return;
+                dispatch({ type: 'REPLACE_COLOR_ACROSS_LAYERS', payload: { fromColor: bulkFrom, toColor: bulkTo, property: bulkProperty }});
+                setBulkOpen(false);
+              }}>Replace</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
           </div>
         </div>
       </div>
+      
+      
       
       <div className="properties-section">
         <PropertiesPanel />

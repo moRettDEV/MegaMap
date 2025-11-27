@@ -278,6 +278,43 @@ const PropertiesPanel = () => {
           </div>
         )}
 
+        {/* Symbol (labels/icons) Properties */}
+        {selectedLayer.type === 'symbol' && (
+          <div className="property-group">
+            <h6 className="property-group-title">Symbol / Label Properties</h6>
+
+            <div className="property-item">
+              <label className="property-label">Text Color</label>
+              <div className="property-control">
+                <ColorPicker
+                  value={getDisplayValue('paint.textColor') || getDisplayValue('paint.text-color') || '#ffffff'}
+                  onChange={(color) => updateLayerProperty('paint.text-color', color)}
+                />
+              </div>
+            </div>
+
+            <div className="property-item">
+              <label className="property-label">Text Halo Color</label>
+              <div className="property-control">
+                <ColorPicker
+                  value={getDisplayValue('paint.textHaloColor') || getDisplayValue('paint.text-halo-color') || '#000000'}
+                  onChange={(color) => updateLayerProperty('paint.text-halo-color', color)}
+                />
+              </div>
+            </div>
+
+            <div className="property-item">
+              <label className="property-label">Icon Color</label>
+              <div className="property-control">
+                <ColorPicker
+                  value={getDisplayValue('paint.iconColor') || getDisplayValue('paint.icon-color') || '#ffffff'}
+                  onChange={(color) => updateLayerProperty('paint.icon-color', color)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Zoom Settings */}
         <div className="property-group">
           <h6 className="property-group-title">Zoom Settings</h6>

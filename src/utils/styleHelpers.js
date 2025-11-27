@@ -113,3 +113,23 @@ export const createDefaultLayer = (type, id, source = 'openmaptiles') => {
 export const generateLayerId = () => {
   return `layer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
+
+// Mapping of common layer ids to Russian names (extendable)
+export const LAYER_NAME_MAP_RU = {
+  'background': 'Фон',
+  'water': 'Вода',
+  'park': 'Парки',
+  'roads': 'Дороги',
+  'buildings': 'Здания',
+  'place_city': 'Город',
+  'poi': 'POI'
+};
+
+export const translateLayerId = (id) => {
+  if (!id) return '';
+  if (LAYER_NAME_MAP_RU[id]) return LAYER_NAME_MAP_RU[id];
+
+  // Try to prettify id: replace underscores and dashes, capitalize words
+  const pretty = id.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return pretty;
+};
