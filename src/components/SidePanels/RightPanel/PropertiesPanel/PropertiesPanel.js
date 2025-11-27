@@ -35,13 +35,7 @@ const PropertiesPanel = () => {
   };
 
   const updateLayerProperty = (property, value) => {
-    if (!selectedLayer || !dispatch) {
-      console.log('No selectedLayer or dispatch');
-      return;
-    }
-
-    console.log('Updating property:', property, 'value:', value);
-    
+    if (!selectedLayer || !dispatch) return;
     dispatch({
       type: 'UPDATE_LAYER_PROPERTY',
       payload: {

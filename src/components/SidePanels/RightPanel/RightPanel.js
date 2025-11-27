@@ -7,13 +7,18 @@ import './RightPanel.css';
 const RightPanel = () => {
   const { mapStyle, dispatch } = useMapStyle();
   const [isHidden, setIsHidden] = useState(false);
-  const [configName, setConfigName] = useState(mapStyle.name || '');
+  const [configName, setConfigName] = useState(mapStyle?.name || '');
+
+  // keep configName in sync when a new style is loaded via context
+  React.useEffect(() => {
+    setConfigName(mapStyle?.name || '');
+  }, [mapStyle]);
 
   const handleHideToggle = () => setIsHidden(!isHidden);
 
   const handleSave = () => {
     const styleToSave = {
-      ...mapStyle,
+      ...(mapStyle || {}),
       name: configName || 'Unnamed Style'
     };
     
@@ -31,26 +36,41 @@ const RightPanel = () => {
   };
 
   const handleLoad = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          try {
-            const styleJson = JSON.parse(event.target.result);
-            dispatch({ type: 'LOAD_STYLE', payload: styleJson });
-            setConfigName(styleJson.name || '');
-          } catch (error) {
-            alert('Error loading style file');
+    try {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.style.display = 'none';
+
+      input.onchange = (e) => {
+        try {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              try {
+                const styleJson = JSON.parse(event.target.result);
+                dispatch({ type: 'LOAD_STYLE', payload: styleJson });
+                setConfigName(styleJson.name || '');
+              } catch (error) {
+                alert('Error loading style file');
+              }
+            };
+            reader.readAsText(file);
           }
-        };
-        reader.readAsText(file);
-      }
-    };
-    input.click();
+        } finally {
+          // remove input after use
+          if (input && input.parentNode) input.parentNode.removeChild(input);
+        }
+      };
+
+      // append to DOM before clicking to avoid some browsers blocking the file dialog
+      document.body.appendChild(input);
+      input.click();
+    } catch (err) {
+      console.error('handleLoad error', err);
+      alert('Не удалось открыть диалог выбора файла');
+    }
   };
 
   const handleReset = () => {
